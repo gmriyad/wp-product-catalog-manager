@@ -32,7 +32,7 @@ class WPCM_Assets {
 
 		$post = get_post();
 
-		if ( ! $post || ! isset( $post->post_content ) || ! is_string( $post->post_content ) ) {
+		if ( ! ( $post instanceof WP_Post ) || ! is_string( $post->post_content ) ) {
 			return;
 		}
 

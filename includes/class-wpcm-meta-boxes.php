@@ -85,6 +85,10 @@ class WPCM_Meta_Boxes {
 	 * @return void
 	 */
 	public function render_meta_box( $post ) {
+		if ( ! ( $post instanceof WP_Post ) ) {
+			return;
+		}
+
 		$fields = array(
 			self::META_SKU           => __( 'SKU', 'wp-product-catalog-manager' ),
 			self::META_MATERIAL      => __( 'Material', 'wp-product-catalog-manager' ),

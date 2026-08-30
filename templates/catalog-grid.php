@@ -112,6 +112,16 @@ $wpcm_get_meta_value = static function ( $post_id, $meta_key ) {
 				$wpcm_product_id    = get_the_ID();
 				$wpcm_product_title = get_the_title( $wpcm_product_id );
 				$wpcm_product_url   = get_permalink( $wpcm_product_id );
+
+				if ( ! is_scalar( $wpcm_product_title ) ) {
+					$wpcm_product_title = '';
+				}
+
+				if ( ! is_string( $wpcm_product_url ) ) {
+					$wpcm_product_url = '';
+				}
+
+				$wpcm_product_title = (string) $wpcm_product_title;
 				$wpcm_display_price = $wpcm_get_meta_value(
 					$wpcm_product_id,
 					WPCM_Meta_Boxes::META_DISPLAY_PRICE
@@ -136,19 +146,20 @@ $wpcm_get_meta_value = static function ( $post_id, $meta_key ) {
 				?>
 				<article class="wpcm-product-card" role="listitem">
 					<?php if ( has_post_thumbnail( $wpcm_product_id ) ) : ?>
+						<?php
+						$wpcm_thumbnail = get_the_post_thumbnail(
+							$wpcm_product_id,
+							'medium',
+							array(
+								'class'   => 'wpcm-product-card__image',
+								'loading' => 'lazy',
+							)
+						);
+						?>
 						<a class="wpcm-product-card__image-link" href="<?php echo esc_url( $wpcm_product_url ); ?>">
-							<?php
-							echo wp_kses_post(
-								get_the_post_thumbnail(
-									$wpcm_product_id,
-									'medium',
-									array(
-										'class'   => 'wpcm-product-card__image',
-										'loading' => 'lazy',
-									)
-								)
-							);
-							?>
+							<?php if ( is_string( $wpcm_thumbnail ) ) : ?>
+								<?php echo wp_kses_post( $wpcm_thumbnail ); ?>
+							<?php endif; ?>
 						</a>
 					<?php endif; ?>
 
@@ -188,7 +199,9 @@ $wpcm_get_meta_value = static function ( $post_id, $meta_key ) {
 		>
 			<ul>
 				<?php foreach ( $wpcm_pagination_links as $wpcm_pagination_link ) : ?>
-					<li><?php echo wp_kses_post( $wpcm_pagination_link ); ?></li>
+					<?php if ( is_string( $wpcm_pagination_link ) ) : ?>
+						<li><?php echo wp_kses_post( $wpcm_pagination_link ); ?></li>
+					<?php endif; ?>
 				<?php endforeach; ?>
 			</ul>
 		</nav>

@@ -42,6 +42,13 @@ class WPCM_Shortcode {
 	const PAGE_PARAMETER = 'wpcm_page';
 
 	/**
+	 * Maximum catalog page accepted from a request.
+	 *
+	 * @var int
+	 */
+	const MAX_PAGE = 10000;
+
+	/**
 	 * Registers the product catalog shortcode.
 	 *
 	 * @return void
@@ -60,7 +67,7 @@ class WPCM_Shortcode {
 		$wpcm_search            = sanitize_text_field(
 			$this->get_request_string( self::SEARCH_PARAMETER )
 		);
-		$wpcm_page              = max( 1, absint( $this->get_request_string( self::PAGE_PARAMETER ) ) );
+		$wpcm_page              = $this->get_catalog_page();
 
 		$query_args = array(
 			'post_type'           => WPCM_Post_Type::POST_TYPE,
@@ -123,6 +130,27 @@ class WPCM_Shortcode {
 	}
 
 	/**
+	 * Returns a controlled positive catalog page number.
+	 *
+	 * @return int
+	 */
+	private function get_catalog_page() {
+		$page = $this->get_request_string( self::PAGE_PARAMETER );
+
+		if ( '' === $page || 1 !== preg_match( '/\A\d+\z/', $page ) ) {
+			return 1;
+		}
+
+		$page = absint( $page );
+
+		if ( $page < 1 ) {
+			return 1;
+		}
+
+		return min( $page, self::MAX_PAGE );
+	}
+
+	/**
 	 * Returns a validated Product Category slug.
 	 *
 	 * @return string
@@ -139,6 +167,7 @@ class WPCM_Shortcode {
 		if (
 			! $term ||
 			is_wp_error( $term ) ||
+			! is_object( $term ) ||
 			! isset( $term->taxonomy ) ||
 			WPCM_Taxonomy::TAXONOMY !== $term->taxonomy
 		) {
