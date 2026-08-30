@@ -9,6 +9,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+require_once WPCM_PLUGIN_DIR . 'includes/class-wpcm-post-type.php';
+require_once WPCM_PLUGIN_DIR . 'includes/class-wpcm-taxonomy.php';
+
 /**
  * Coordinates plugin initialization.
  */
@@ -16,10 +19,13 @@ class WPCM_Plugin {
 	/**
 	 * Runs the plugin.
 	 *
-	 * Feature registration belongs in later milestones.
-	 *
 	 * @return void
 	 */
 	public function run() {
+		$post_type = new WPCM_Post_Type();
+		$taxonomy  = new WPCM_Taxonomy();
+
+		add_action( 'init', array( $post_type, 'register' ) );
+		add_action( 'init', array( $taxonomy, 'register' ) );
 	}
 }
