@@ -13,6 +13,28 @@ if ( ! isset( $wpcm_query ) || ! ( $wpcm_query instanceof WP_Query ) ) {
 	return;
 }
 
+if ( ! isset( $wpcm_categories ) || ! is_array( $wpcm_categories ) ) {
+	$wpcm_categories = array();
+}
+
+if ( ! isset( $wpcm_selected_category ) || ! is_string( $wpcm_selected_category ) ) {
+	$wpcm_selected_category = '';
+}
+
+if ( ! isset( $wpcm_search ) || ! is_string( $wpcm_search ) ) {
+	$wpcm_search = '';
+}
+
+if ( ! isset( $wpcm_form_action ) || ! is_string( $wpcm_form_action ) ) {
+	$wpcm_form_action = '';
+}
+
+if ( ! isset( $wpcm_pagination_links ) || ! is_array( $wpcm_pagination_links ) ) {
+	$wpcm_pagination_links = array();
+}
+
+$wpcm_pagination_label = __( 'Product catalog pagination', 'wp-product-catalog-manager' );
+
 $wpcm_get_meta_value = static function ( $post_id, $meta_key ) {
 	$value = get_post_meta( $post_id, $meta_key, true );
 
@@ -27,6 +49,60 @@ $wpcm_get_meta_value = static function ( $post_id, $meta_key ) {
 	class="wpcm-catalog"
 	aria-label="<?php echo esc_attr__( 'Product catalog', 'wp-product-catalog-manager' ); ?>"
 >
+	<form
+		class="wpcm-catalog__filters"
+		method="get"
+		action="<?php echo esc_url( $wpcm_form_action ); ?>"
+	>
+		<div class="wpcm-catalog__filter-field">
+			<label for="wpcm-category-filter">
+				<?php echo esc_html__( 'Product Category', 'wp-product-catalog-manager' ); ?>
+			</label>
+			<select id="wpcm-category-filter" name="wpcm_category">
+				<option value="">
+					<?php echo esc_html__( 'All Categories', 'wp-product-catalog-manager' ); ?>
+				</option>
+				<?php foreach ( $wpcm_categories as $wpcm_category ) : ?>
+					<?php
+					if (
+						! is_object( $wpcm_category ) ||
+						! isset( $wpcm_category->slug, $wpcm_category->name ) ||
+						! is_scalar( $wpcm_category->slug ) ||
+						! is_scalar( $wpcm_category->name )
+					) {
+						continue;
+					}
+
+					$wpcm_category_slug = (string) $wpcm_category->slug;
+					$wpcm_category_name = (string) $wpcm_category->name;
+					?>
+					<option
+						value="<?php echo esc_attr( $wpcm_category_slug ); ?>"
+						<?php selected( $wpcm_selected_category, $wpcm_category_slug ); ?>
+					>
+						<?php echo esc_html( $wpcm_category_name ); ?>
+					</option>
+				<?php endforeach; ?>
+			</select>
+		</div>
+
+		<div class="wpcm-catalog__filter-field">
+			<label for="wpcm-search-filter">
+				<?php echo esc_html__( 'Search Products', 'wp-product-catalog-manager' ); ?>
+			</label>
+			<input
+				type="search"
+				id="wpcm-search-filter"
+				name="wpcm_search"
+				value="<?php echo esc_attr( $wpcm_search ); ?>"
+			/>
+		</div>
+
+		<button class="wpcm-catalog__filter-submit" type="submit">
+			<?php echo esc_html__( 'Filter Products', 'wp-product-catalog-manager' ); ?>
+		</button>
+	</form>
+
 	<?php if ( $wpcm_query->have_posts() ) : ?>
 		<div class="wpcm-catalog__grid" role="list">
 			<?php
@@ -103,5 +179,18 @@ $wpcm_get_meta_value = static function ( $post_id, $meta_key ) {
 		<p class="wpcm-catalog__empty">
 			<?php echo esc_html__( 'No products found.', 'wp-product-catalog-manager' ); ?>
 		</p>
+	<?php endif; ?>
+
+	<?php if ( $wpcm_pagination_links ) : ?>
+		<nav
+			class="wpcm-catalog__pagination"
+			aria-label="<?php echo esc_attr( $wpcm_pagination_label ); ?>"
+		>
+			<ul>
+				<?php foreach ( $wpcm_pagination_links as $wpcm_pagination_link ) : ?>
+					<li><?php echo wp_kses_post( $wpcm_pagination_link ); ?></li>
+				<?php endforeach; ?>
+			</ul>
+		</nav>
 	<?php endif; ?>
 </section>
