@@ -4,6 +4,7 @@
  * Description: Provides the bootstrap for the WP Product Catalog Manager plugin.
  * Version: 0.1.0
  * Text Domain: wp-product-catalog-manager
+ * Domain Path: /languages
  *
  * @package WP_Product_Catalog_Manager
  */
