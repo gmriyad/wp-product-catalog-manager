@@ -4,7 +4,7 @@
 
 This file is the authoritative project specification for the WP Product Catalog Manager WordPress plugin. Work must be delivered incrementally and must stay within the scope of the requested commit. If a request conflicts with this specification, stop and obtain clarification before expanding the scope.
 
-The current milestone is commit 1 only: `chore: scaffold plugin structure and bootstrap`.
+The active milestone is determined by the explicit task request and must follow the eight-step commit sequence below.
 
 ## MVP requirements
 

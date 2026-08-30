@@ -1,5 +1,73 @@
 /**
- * Front-end catalog styles placeholder.
- *
- * Styles will be added in a later milestone.
+ * Product catalog styles.
  */
+
+.wpcm-catalog__grid {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: 1.5rem;
+}
+
+.wpcm-product-card {
+	overflow: hidden;
+	border: 1px solid #dcdcde;
+	border-radius: 0.25rem;
+	background: #fff;
+}
+
+.wpcm-product-card__image-link,
+.wpcm-product-card__image {
+	display: block;
+}
+
+.wpcm-product-card__image {
+	width: 100%;
+	height: auto;
+}
+
+.wpcm-product-card__content {
+	padding: 1rem;
+}
+
+.wpcm-product-card__title {
+	margin: 0 0 1rem;
+	font-size: 1.25rem;
+	line-height: 1.3;
+}
+
+.wpcm-product-card__meta {
+	display: grid;
+	gap: 0.5rem;
+	margin: 0;
+}
+
+.wpcm-product-card__meta-row {
+	display: grid;
+	grid-template-columns: minmax(6rem, max-content) minmax(0, 1fr);
+	gap: 0.75rem;
+}
+
+.wpcm-product-card__meta dt {
+	font-weight: 600;
+}
+
+.wpcm-product-card__meta dd {
+	margin: 0;
+	overflow-wrap: anywhere;
+}
+
+.wpcm-catalog__empty {
+	margin: 0;
+}
+
+@media (min-width: 40rem) {
+	.wpcm-catalog__grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@media (min-width: 64rem) {
+	.wpcm-catalog__grid {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+}
